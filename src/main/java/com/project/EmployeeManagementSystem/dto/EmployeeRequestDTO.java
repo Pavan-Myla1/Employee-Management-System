@@ -1,9 +1,21 @@
+
 package com.project.EmployeeManagementSystem.dto;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 
 public class EmployeeRequestDTO {
 
+    @NotBlank(message = "Employee name is required")
+    @Size(max = 100, message = "Employee name must not exceed 100 characters")
     private String name;
+
+    @NotBlank(message = "Department is required")
+    @Size(max = 100, message = "Department must not exceed 100 characters")
     private String department;
+
+    @PositiveOrZero(message = "Salary must be zero or greater")
     private double salary;
 
     public EmployeeRequestDTO() {

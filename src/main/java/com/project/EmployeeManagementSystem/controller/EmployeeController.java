@@ -3,6 +3,7 @@ package com.project.EmployeeManagementSystem.controller;
 import com.project.EmployeeManagementSystem.dto.EmployeeRequestDTO;
 import com.project.EmployeeManagementSystem.dto.EmployeeResponseDTO;
 import com.project.EmployeeManagementSystem.model.Employee;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import com.project.EmployeeManagementSystem.service.EmployeeService;
 
@@ -20,8 +21,7 @@ public class EmployeeController {
 
     @PostMapping
     public EmployeeResponseDTO addEmployee(
-            @RequestBody EmployeeRequestDTO employeeDTO) {
-
+            @Valid @RequestBody EmployeeRequestDTO employeeDTO) {
         return employeeService.addEmployee(employeeDTO);
     }
 
@@ -41,8 +41,7 @@ public class EmployeeController {
     @PutMapping("/{id}")
     public EmployeeResponseDTO updateEmployee(
             @PathVariable Long id,
-            @RequestBody EmployeeRequestDTO employeeDTO) {
-
+            @Valid @RequestBody EmployeeRequestDTO employeeDTO) {
         return employeeService.updateEmployee(id, employeeDTO);
     }
 

@@ -2,6 +2,7 @@ package com.project.EmployeeManagementSystem.service;
 
 import com.project.EmployeeManagementSystem.dto.EmployeeRequestDTO;
 import com.project.EmployeeManagementSystem.dto.EmployeeResponseDTO;
+import com.project.EmployeeManagementSystem.exception.EmployeeNotFoundException;
 import com.project.EmployeeManagementSystem.model.Employee;
 import com.project.EmployeeManagementSystem.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
@@ -46,50 +47,36 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public EmployeeResponseDTO getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
 
-        Employee employee =
-                employeeRepository.findById(id).orElse(null);
-
-        if (employee != null) {
-            return convertToResponseDTO(employee);
-        }
-
-        return null;
+        return convertToResponseDTO(employee);
     }
 
     @Override
     public EmployeeResponseDTO updateEmployee(
-            Long id,
-            EmployeeRequestDTO employeeDTO) {
+            Long id, EmployeeRequestDTO employeeDTO) {
 
-        Employee existingEmployee =
-                employeeRepository.findById(id).orElse(null);
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
 
-        if (existingEmployee != null) {
+        existingEmployee.setName(employeeDTO.getName());
+        existingEmployee.setDepartment(employeeDTO.getDepartment());
+        existingEmployee.setSalary(employeeDTO.getSalary());
 
-            existingEmployee.setName(employeeDTO.getName());
-            existingEmployee.setDepartment(employeeDTO.getDepartment());
-            existingEmployee.setSalary(employeeDTO.getSalary());
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
 
-            Employee updatedEmployee =
-                    employeeRepository.save(existingEmployee);
-
-            return convertToResponseDTO(updatedEmployee);
-        }
-
-        return null;
+        return convertToResponseDTO(updatedEmployee);
     }
 
     @Override
     public boolean deleteEmployee(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
 
-        if (employeeRepository.existsById(id)) {
+        employeeRepository.delete(employee);
 
-            employeeRepository.deleteById(id);
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     private EmployeeResponseDTO convertToResponseDTO(
